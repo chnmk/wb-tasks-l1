@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 Дана последовательность температурных колебаний: -25.4, -27.0 13.0, 19.0, 15.5, 24.5, -21.0, 32.5.
 
@@ -9,5 +11,13 @@ package main
 */
 
 func main() {
+	arr := []float64{-25.4, -27.0, 13.0, 19.0, 15.5, 24.5, -21.0, 32.5}
+	result := make(map[int]float64)
 
+	// TODO: Разбить на группы по 10
+	for _, f := range arr {
+		result[int(f)] = f
+	}
+
+	fmt.Println(result)
 }
