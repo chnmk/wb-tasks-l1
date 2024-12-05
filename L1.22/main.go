@@ -3,26 +3,40 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math/big"
 )
 
 /*
 Разработать программу, которая перемножает, делит, складывает, вычитает две числовых переменных a и b, значение которых > 2^20.
 */
 
-// 2^20 = 1048576
-// TODO: подумать
 func main() {
-	var a int
-	var b int
-	flag.IntVar(&a, "a", 4000000000000, "Переменная a")
-	flag.IntVar(&b, "b", 2000000000000, "Переменная b")
+	var a int64
+	var b int64
+	flag.Int64Var(&a, "a", 4000000000000, "Переменная a")
+	flag.Int64Var(&b, "b", -2000000000000, "Переменная b")
 	flag.Parse()
 
-	fmt.Println(2 << 19)
+	A := big.NewInt(a)
+	B := big.NewInt(b)
 
-	a1 := a / (2 << 19)
-	b1 := b / (2 << 19)
+	var Sum big.Int
+	Sum.Add(A, B)
 
-	fmt.Println(a1)
-	fmt.Println(b1)
+	var Dif big.Int
+	var NegB big.Int
+	NegB.Neg(B)
+	Dif.Add(A, &NegB)
+
+	var Mul big.Int
+	Mul.Mul(A, B)
+
+	var Div big.Int
+	Div.Div(A, B)
+
+	fmt.Println("Результат сложения: ", Sum.String())
+	fmt.Println("Результат вычитания: ", Dif.String())
+	fmt.Println("Результат умножения: ", Mul.String())
+	fmt.Println("Результат деления: ", Div.String())
+
 }

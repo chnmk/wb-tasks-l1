@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 /*
 Дана последовательность температурных колебаний: -25.4, -27.0 13.0, 19.0, 15.5, 24.5, -21.0, 32.5.
@@ -11,12 +14,23 @@ import "fmt"
 */
 
 func main() {
-	arr := []float64{-25.4, -27.0, 13.0, 19.0, 15.5, 24.5, -21.0, 32.5}
-	result := make(map[int]float64)
+	arr := []float64{-25.4, -27.0, -3.1, 3.2, 13.0, 19.0, 15.5, 24.5, 0, -21.0, 32.5}
+	result := make(map[string][]float64)
 
-	// TODO: Разбить на группы по 10
 	for _, f := range arr {
-		result[int(f)] = f
+
+		firstDigit := int(f) / 10
+
+		var group string
+		if firstDigit == 0 && f < 0 {
+			group = "0 to -10"
+		} else if firstDigit == 0 && f >= 0 {
+			group = "0 to 10"
+		} else {
+			group = strconv.Itoa(firstDigit * 10)
+		}
+
+		result[group] = append(result[group], f)
 	}
 
 	fmt.Println(result)

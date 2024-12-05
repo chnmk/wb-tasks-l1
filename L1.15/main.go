@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
-	"strconv"
+
+	"math/rand/v2"
 )
 
 /*
+Вопрос:
+
 К каким негативным последствиям может привести данный фрагмент кода, и как это исправить? Приведите корректный пример реализации.
 
 var justString string
@@ -16,26 +19,40 @@ func someFunc() {
 func main() {
   someFunc()
 }
+
+
+Ответ:
+
+Возможны как минимум две проблемы.
+	1. Паника если попытаться взять v[:100] от строки меньшего размера
+	2. Бессмысленное создание большой переменной v, которая в данном случае не пригодится
+
+Пример улучшенной реализации:
 */
 
-var justString string
+const symbols = "abcdefghijklmnopqrstuvwxyz"
 
-func createHugeString(i int) string {
+func createHugeString(size int) string {
 	// Какая-то логика
 	// ...
 
-	return strconv.Itoa(i)
+	b := make([]byte, size)
+
+	for i := range b {
+		b[i] = symbols[rand.IntN(len(symbols))]
+	}
+
+	return string(b)
 }
 
-// TODO
-func someFunc() {
-	v := createHugeString(1 << 10) // Сдвиг влево на 1 это умножение на 2, сдвиг вправо - деление на 2.
-	justString = v[:100]
+var justString string
 
-	fmt.Println(v)
+func someFunc() {
+	justString = createHugeString(100) // Cразу создаём строку нужного размера, исключая обе проблемы
+
+	// Какая-то логика
+	// ...
 	fmt.Println(justString)
-	// runtime error: slice bound out of range [:100] with length 4
-	// 2^10 = 1024
 }
 
 func main() {

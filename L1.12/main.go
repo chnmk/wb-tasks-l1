@@ -7,7 +7,6 @@ import "fmt"
 */
 
 func main() {
-	// TODO: всё работает, но можно ещё подумать
 	str := []string{"cat", "cat", "dog", "cat", "tree"}
 
 	set := make(map[string]struct{})
