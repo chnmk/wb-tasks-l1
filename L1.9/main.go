@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /*
 Разработать конвейер чисел.
@@ -9,20 +11,31 @@ import "fmt"
 */
 
 func main() {
-	// TODO: КОНВЕЙЕР
+	arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 151}
 
 	// Даны два канала.
-	ch1 := make(chan int, 1)
-	ch2 := make(chan int, 1)
+	ch1 := make(chan int, len(arr))
+	ch2 := make(chan int, len(arr))
 
-	for i := 0; i < 100; i++ {
-		// В первый канал пишутся числа из массива.
-		ch1 <- i
+	// В первый канал пишутся числа из массива.
+	go func() {
+		for _, n := range arr {
+			ch1 <- n
+		}
+		close(ch1)
 
-		// TODO: Последовательно или просто в два канала записывать и с первым ничего не делать?
-		number := <-ch1
-		ch2 <- number * number
+	}()
 
-		fmt.Println(<-ch2)
+	// Во второй - результат операции x*2.
+	go func() {
+		for i := range ch1 {
+			ch2 <- i * i
+		}
+		close(ch2)
+	}()
+
+	// После этого данные из второго канала должны выводиться в stdout.
+	for i := range ch2 {
+		fmt.Println(i)
 	}
 }
