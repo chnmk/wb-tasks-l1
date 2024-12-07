@@ -1,42 +1,48 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
-	"sync"
-	"time"
+	"strings"
 )
 
 /*
-Реализовать собственную функцию sleep.
+Разработать программу, которая проверяет, что все символы в строке уникальные (true — если уникальные, false etc).
+Функция проверки должна быть регистронезависимой.
+
+Например:
+abcd — true
+abCdefAaf — false
+aabcd — false
 */
 
 func main() {
-	// Функция sleep
-	time.Sleep(1 * time.Second)
+	var str string
+	flag.StringVar(&str, "s", "abCdefAaf", "Строка, которую необходимо проверить")
+	flag.Parse()
 
-	fmt.Println(1)
+	str = strings.ToLower(str)
+	result := true
 
-	// Вариант 1
-	<-time.After(1 * time.Second)
-
-	fmt.Println(2)
-
-	// Вариант 2 - без after
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		for range ctx.Done() {
-			return
+	// Вариант 1, сложность больше, но без дополнительных структур
+	/*
+		for i, r1 := range str {
+			for j, r2 := range str {
+				if i != j && r1 == r2 {
+					result = false
+				}
+			}
 		}
+	*/
 
-	}()
+	// Вариант 2, сложность меньше
+	strmap := make(map[rune]bool)
+	for _, r := range str {
+		if strmap[r] {
+			result = false
+		}
+		strmap[r] = true
+	}
 
-	wg.Wait()
-	fmt.Println(3)
+	fmt.Println(result)
 }
